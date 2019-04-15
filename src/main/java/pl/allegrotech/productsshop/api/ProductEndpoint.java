@@ -12,6 +12,8 @@ import pl.allegrotech.productsshop.domain.ProductFacade;
 import pl.allegrotech.productsshop.domain.ProductRequestDto;
 import pl.allegrotech.productsshop.domain.ProductResponseDto;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @RestController
 @RequestMapping("/products")
 class ProductEndpoint {
@@ -22,17 +24,17 @@ class ProductEndpoint {
         this.productFacade = productFacade;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     ProductResponseDto getProduct(@PathVariable String id) {
         return productFacade.get(id);
     }
 
-    @PostMapping
+    @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     ProductResponseDto createProduct(@RequestBody ProductRequestDto productRequestDto) {
         return productFacade.create(productRequestDto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     ProductResponseDto updateProduct(@PathVariable String id, @RequestBody ProductRequestDto productRequestDto) {
         if (!id.equals(productRequestDto.getId())) {
             throw new ProductIdIncorrectException(id, productRequestDto.getId());
