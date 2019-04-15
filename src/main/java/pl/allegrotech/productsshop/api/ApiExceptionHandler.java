@@ -15,10 +15,10 @@ public class ApiExceptionHandler {
         return new ResponseEntity(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(ProductRequestNotValidException.class)
     public ResponseEntity handleProductRequestNotValid(ProductRequestNotValidException exception) {
-        return new ResponseEntity(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(exception.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

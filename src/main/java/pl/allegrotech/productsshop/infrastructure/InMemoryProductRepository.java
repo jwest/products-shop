@@ -12,11 +12,6 @@ class InMemoryProductRepository implements ProductRepository {
     private final Map<String, Product> products = new HashMap<>();
 
     @Override
-    public int count() {
-        return products.size();
-    }
-
-    @Override
     public Product save(Product product) {
         products.put(product.getId(), product);
         return product;

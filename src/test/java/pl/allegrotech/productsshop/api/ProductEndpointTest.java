@@ -12,6 +12,7 @@ import pl.allegrotech.productsshop.domain.ProductResponseDto;
 import pl.allegrotech.productsshop.infrastructure.ProductRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.*;
@@ -29,14 +30,17 @@ public class ProductEndpointTest extends IntegrationTest {
         // given
         var productRequest = new ProductRequestDto(null, "czerwona sukienka");
         var productRequestJson = mapToJson(productRequest);
-        var httpRequest = getHttpRequest(productRequestJson);
+        var httpRequest = buildRequest(productRequestJson);
 
         // when
-        ResponseEntity<String> response = httpClient.postForEntity(url("/products"), httpRequest, String.class);
+        ResponseEntity<ProductResponseDto> response = httpClient.postForEntity(url("/products"), httpRequest, ProductResponseDto.class);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(OK);
-        assertThat(response.getBody()).contains("\"name\":\"czerwona sukienka\"");
+
+        var productResponse = response.getBody();
+        assertThat(productResponse.getId()).isNotBlank();
+        assertThat(productResponse.getName()).isEqualTo("czerwona sukienka");
     }
 
     @Test
@@ -77,7 +81,7 @@ public class ProductEndpointTest extends IntegrationTest {
 
         //when
         ResponseEntity<ProductResponseDto> response = httpClient.exchange(url, PUT,
-                getHttpRequest(updateProductRequestJson), ProductResponseDto.class);
+                buildRequest(updateProductRequestJson), ProductResponseDto.class);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(OK);
@@ -99,10 +103,12 @@ public class ProductEndpointTest extends IntegrationTest {
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(OK);
-        assertThat(productRepository.count()).isEqualTo(0);
+        assertThatThrownBy(() -> productFacade.get(existingProduct.getId()))
+                .isInstanceOf(ProductNotFoundException.class)
+                .hasMessage("There is no product with id: " + existingProduct.getId());
     }
 
-    private HttpEntity<String> getHttpRequest(String json) {
+    private HttpEntity<String> buildRequest(String json) {
         var headers = new HttpHeaders();
         headers.set("Content-type", "application/json");
 

@@ -4,8 +4,6 @@ import pl.allegrotech.productsshop.domain.Product;
 
 public interface ProductRepository {
 
-    int count();
-
     Product save(Product product);
 
     Product findById(String id);
