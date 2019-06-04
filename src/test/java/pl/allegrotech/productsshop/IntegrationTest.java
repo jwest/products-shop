@@ -13,25 +13,21 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class IntegrationTest {
 
-	@Autowired
-	protected TestRestTemplate httpClient;
+  @Autowired protected TestRestTemplate httpClient;
 
-	@Autowired
-	protected ObjectMapper objectMapper;
+  @Autowired protected ObjectMapper objectMapper;
 
-	@LocalServerPort
-	protected int port;
+  @LocalServerPort protected int port;
 
-	protected String mapToJson(Object object) {
-		try {
-			return objectMapper.writeValueAsString(object);
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
-		}
-	}
+  protected String mapToJson(Object object) {
+    try {
+      return objectMapper.writeValueAsString(object);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
-	protected String url(String endpoint) {
-		return "http://localhost:" + port + endpoint;
-	}
-
+  protected String url(String endpoint) {
+    return "http://localhost:" + port + endpoint;
+  }
 }

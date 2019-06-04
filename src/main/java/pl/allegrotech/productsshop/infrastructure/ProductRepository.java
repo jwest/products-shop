@@ -4,10 +4,9 @@ import pl.allegrotech.productsshop.domain.Product;
 
 public interface ProductRepository {
 
-    Product save(Product product);
+  Product save(Product product);
 
-    Product findById(String id);
+  Product findById(String id);
 
-    void removeById(String id);
-
+  void removeById(String id);
 }
